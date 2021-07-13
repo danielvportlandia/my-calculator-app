@@ -13,6 +13,8 @@
         android:background="#efefef"
         android:textSize="48sp"
         android:maxLength="12"
+        android:padding="10dp"
+        android:gravity="end|center_vertical|bottom"
         />
 
     <LinearLayout
