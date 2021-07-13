@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
-import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 import java.lang.ArithmeticException
 
@@ -20,7 +19,6 @@ class MainActivity : AppCompatActivity() {
 
     fun onDigit(view: View) {
         tvInput.append((view as Button).text)
-//        Toast.makeText(this, "Button works", Toast.LENGTH_SHORT).show()
         lastNumeric = true
     }
 
@@ -43,10 +41,12 @@ class MainActivity : AppCompatActivity() {
             var tvValue = tvInput.text.toString()
             var prefix = ""
             try {
+
                 if (tvValue.startsWith("-")) {
                     prefix = "-"
                     tvValue = tvValue.substring(1)
                 }
+
                 if (tvValue.contains("-")) {
                     val splitValue = tvValue.split("-")
                     var one = splitValue[0]
@@ -54,8 +54,33 @@ class MainActivity : AppCompatActivity() {
                     if (!prefix.isEmpty()) {
                         one = prefix + one
                     }
-                    tvInput.text = (one.toDouble() - two.toDouble()).toString()
+                    tvInput.text = removeZeroAfterDot((one.toDouble() - two.toDouble()).toString())
+                } else if (tvValue.contains("+")) {
+                    val splitValue = tvValue.split("+")
+                    var one = splitValue[0]
+                    var two = splitValue[1]
+                    if (!prefix.isEmpty()) {
+                        one = prefix + one
+                    }
+                    tvInput.text = removeZeroAfterDot((one.toDouble() + two.toDouble()).toString())
+                } else if (tvValue.contains("*")) {
+                    val splitValue = tvValue.split("*")
+                    var one = splitValue[0]
+                    var two = splitValue[1]
+                    if (!prefix.isEmpty()) {
+                        one = prefix + one
+                    }
+                    tvInput.text = removeZeroAfterDot((one.toDouble() * two.toDouble()).toString())
+                } else if (tvValue.contains("/")) {
+                    val splitValue = tvValue.split("/")
+                    var one = splitValue[0]
+                    var two = splitValue[1]
+                    if (!prefix.isEmpty()) {
+                        one = prefix + one
+                    }
+                    tvInput.text = removeZeroAfterDot((one.toDouble() / two.toDouble()).toString())
                 }
+
             } catch (e: ArithmeticException) {
                 e.printStackTrace()
             }
@@ -68,6 +93,14 @@ class MainActivity : AppCompatActivity() {
             lastNumeric = false
             lastDot = false
         }
+    }
+
+    private fun removeZeroAfterDot(result: String) : String {
+        var value = result
+        if (result.contains(".0")) {
+            value = result.substring(0, result.length - 2)
+        }
+        return value
     }
 
     private fun isOperatorAdded(value: String) : Boolean {
